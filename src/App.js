@@ -34,14 +34,15 @@ export default function App() {
       if (operation === "-") setNumber(numberTemp - number);
       if (operation === "*") setNumber(numberTemp * number);
       if (operation === "/") setNumber(numberTemp / number);
-    } else {
-      setNumberTemp(number);
-      setFormula(formula.concat(operator));
-      setNumber(0);
-    }
 
-    setNumberTemp(number);
-    setOperation(operator);
+      setNumberTemp(number);
+      setOperation(operator);
+    } else {
+      setNumber(0);
+      setNumberTemp(number);
+      setOperation(operator);
+      setFormula(formula.concat(operator));
+    }
   };
 
   return (
