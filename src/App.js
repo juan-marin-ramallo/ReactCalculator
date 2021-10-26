@@ -55,10 +55,6 @@ export default function App() {
         });
       } else {
         let res = 0;
-        console.debug(calc.num);
-        console.debug(calc.numtmp);
-        console.debug(calc.sign);
-
         if (calc.sign === "+") res = calc.numtmp + calc.num;
         if (calc.sign === "-") res = calc.numtmp - calc.num;
         if (calc.sign === "*") res = calc.numtmp * calc.num;
@@ -81,7 +77,7 @@ export default function App() {
     <div className="App">
       <div className="body">
         <div className="title">
-          <h1 className="body">.</h1>
+          <h1 className="body">Calculator</h1>
         </div>
         <div className="result-formula">
           <ResultBox caption={calc.formula} />
