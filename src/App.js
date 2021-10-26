@@ -1,47 +1,79 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "./components/Button";
 import { ResultBox } from "./components/ResultBox";
 import "./styles.css";
 
 export default function App() {
-  const [number, setNumber] = useState(0);
-  const [numberTemp, setNumberTemp] = useState(0);
-  const [operation, setOperation] = useState("");
-  const [formula, setFormula] = useState("");
+  const [calc, setCalc] = useState({
+    num: 0,
+    numtmp: 0,
+    sign: "",
+    formula: ""
+  });
 
   const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
   const operators = ["CE", "=", "+", "-", "*", "/"];
 
-  useEffect(() => {
-    if (operation === "=") {
-      setFormula(number.toString());
-    }
-  }, [operation, number]);
-
   const handleNumber = (digit) => {
-    setFormula(formula.concat(digit));
-    setNumber(number * 10 + digit);
+    if (
+      calc.formula.endsWith("+") ||
+      calc.formula.endsWith("-") ||
+      calc.formula.endsWith("*") ||
+      calc.formula.endsWith("/")
+    ) {
+      setCalc({
+        ...calc,
+        num: digit,
+        formula: calc.formula.concat(digit)
+      });
+    } else {
+      setCalc({
+        ...calc,
+        num: calc.num * 10 + digit,
+        formula: calc.formula.concat(digit)
+      });
+    }
   };
 
   const handleOperator = (operator) => {
     if (operator === "CE") {
-      setNumber(0);
-      setNumberTemp(0);
-      setOperation("");
-      setFormula("");
-    } else if (operator === "=") {
-      if (operation === "+") setNumber(numberTemp + number);
-      if (operation === "-") setNumber(numberTemp - number);
-      if (operation === "*") setNumber(numberTemp * number);
-      if (operation === "/") setNumber(numberTemp / number);
-
-      setNumberTemp(number);
-      setOperation(operator);
+      setCalc({
+        ...calc,
+        numtmp: 0,
+        num: 0,
+        formula: "",
+        sign: ""
+      });
     } else {
-      setNumber(0);
-      setNumberTemp(number);
-      setOperation(operator);
-      setFormula(formula.concat(operator));
+      if (calc.sign === "") {
+        setCalc({
+          ...calc,
+          numtmp: calc.num,
+          num: 0,
+          formula: calc.formula.concat(operator),
+          sign: operator
+        });
+      } else {
+        let res = 0;
+        console.debug(calc.num);
+        console.debug(calc.numtmp);
+        console.debug(calc.sign);
+
+        if (calc.sign === "+") res = calc.numtmp + calc.num;
+        if (calc.sign === "-") res = calc.numtmp - calc.num;
+        if (calc.sign === "*") res = calc.numtmp * calc.num;
+        if (calc.sign === "/") res = calc.numtmp / calc.num;
+        if (calc.sign === "=") res = calc.num;
+
+        setCalc({
+          ...calc,
+          numtmp: res,
+          num: res,
+          formula:
+            operator === "=" ? res.toString() : res.toString().concat(operator),
+          sign: operator
+        });
+      }
     }
   };
 
@@ -49,13 +81,13 @@ export default function App() {
     <div className="App">
       <div className="body">
         <div className="title">
-          <h1 className="body">Calculator</h1>
+          <h1 className="body">.</h1>
         </div>
         <div className="result-formula">
-          <ResultBox caption={formula} />
+          <ResultBox caption={calc.formula} />
         </div>
         <div className="result-number">
-          <ResultBox caption={number} />
+          <ResultBox caption={calc.num} />
           <hr />
         </div>
         <div className="calculator">
